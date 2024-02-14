@@ -170,20 +170,36 @@ class ProductTable extends TableAbstract
     {
         $buttons = [];
         if (EcommerceHelper::isEnabledSupportDigitalProducts() && $this->hasPermission('products.create')) {
-            $buttons['create'] =
-
+            $buttons['create'] = [
+                'extend' => 'collection',
+                'text' => view('core/table::partials.create')->render(),
+                'class' => 'btn-primary',
+                'buttons' => [
+                    [
+                        'className' => 'action-item',
+                        'text' => ProductTypeEnum::PHYSICAL()->toIcon() . ' ' . Html::tag(
+                            'span',
+                            ProductTypeEnum::PHYSICAL()->label(),
+                            [
+                                    'data-action' => 'physical-product',
+                                    'data-href' => route('products.create'),
+                                    'class' => 'ms-1',
+                                ]
+                        )->toHtml(),
+                    ],
                     [
                         'className' => 'action-item',
                         'text' => ProductTypeEnum::DIGITAL()->toIcon() . ' ' . Html::tag(
                             'span',
-                                'Create Product',
+                            ProductTypeEnum::DIGITAL()->label(),
                             [
                                     'data-action' => 'digital-product',
                                     'data-href' => route('products.create', ['product_type' => 'digital']),
                                     'class' => 'ms-1',
                                 ]
                         )->toHtml(),
-
+                    ],
+                ],
             ];
         } else {
             $buttons = $this->addCreateButton(route('products.create'), 'products.create');
